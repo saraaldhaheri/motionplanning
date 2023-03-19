@@ -2,13 +2,15 @@
 """
 Created on Fri Mar 17 11:43:29 2023
 
-@author: emman
+@author: sara
 """
 
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import KDTree
+
+import time
 
 # parameter
 N_SAMPLE = 1000  # number of sample_points
@@ -48,6 +50,8 @@ def prm_planning(start_x, start_y, goal_x, goal_y,
     :param rng: (Optional) Random generator
     :return:
     """
+    tic = time.perf_counter()
+    
     obstacle_kd_tree = KDTree(np.vstack((obstacle_x_list, obstacle_y_list)).T)
 
     sample_x, sample_y = sample_points(start_x, start_y, goal_x, goal_y,
@@ -62,7 +66,10 @@ def prm_planning(start_x, start_y, goal_x, goal_y,
 
     rx, ry = dijkstra_planning(
         start_x, start_y, goal_x, goal_y, road_map, sample_x, sample_y)
-
+    
+    toc = time.perf_counter()
+    
+    print(f"Motion planning completed in {toc - tic:0.4f} seconds")
     return rx, ry
 
 
@@ -264,7 +271,7 @@ def plot_circle(x, y, size, color="-b"):  # pragma: no cover
 
 def main(rng=None):
     print(__file__ + " start!!")
-
+    
     # start and goal position
     sx = 0.0  # [m]
     sy = 0.0  # [m]
@@ -288,25 +295,24 @@ def main(rng=None):
     ax.set_ylim([-2, 15])
 
     for obs in obstacleList:
-        circle = plt.Circle((obs[0], obs[1]), obs[2], color='blue', fill=True)
+        circle = plt.Circle((obs[0], obs[1]), obs[2], color="blue", fill=True)
         ax.add_artist(circle)
    
     if show_animation:
-        plt.plot(ox, oy, ".k", color="blue")
+        plt.plot(ox, oy, ".b")
         plt.plot(sx, sy, "^r")
-        plt.plot(gx, gy, "^c")
-        plt.grid(True)
+        plt.plot(gx, gy, "x", color="green")
+        plt.grid(True)  
         plt.axis("equal")
 
     rx, ry = prm_planning(sx, sy, gx, gy, ox, oy, robot_size, rng=rng)
 
-    assert rx, 'Cannot found path'
+    assert rx, 'Cannot find path'
 
     if show_animation:
         plt.plot(rx, ry, "-r")
         plt.pause(0.001)
         plt.show()
-
 
 if __name__ == '__main__':
     main()

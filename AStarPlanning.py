@@ -92,13 +92,15 @@
 import math
 import heapq
 import matplotlib.pyplot as plt
+import time
+from memory_profiler import profile
 
 # define the obstacles
 obstacles = [(5, 5, 1), (3, 6, 2), (3, 8, 2), (3, 10, 2), (7, 5, 2), (9, 5, 2), (8, 10, 1)]
 
 # define the start and goal positions
 start = (0, 0)
-goal = (5, 9)
+goal = (6, 10)
 
 # define the radius of the robot
 robot_radius = 0.8
@@ -127,8 +129,10 @@ def get_neighbors(point):
 def distance(point1, point2):
     return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
 
+@profile(precision=4)
 # define the A* search algorithm
 def a_star(start, goal):
+    tic = time.perf_counter()
     frontier = [(0, start)]
     came_from = {start: None}
     cost_so_far = {start: 0}
@@ -151,6 +155,9 @@ def a_star(start, goal):
         current = came_from[current]
         path.append(current)
     path.reverse()
+
+    toc = time.perf_counter()
+    print(f"Motion planning completed in {toc - tic:0.4f} seconds")
     return path
 
 # run the A* algorithm and animate the path

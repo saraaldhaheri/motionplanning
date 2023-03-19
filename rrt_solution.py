@@ -12,6 +12,8 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
+import time
+
 show_animation = True
 
 
@@ -268,13 +270,15 @@ def main(gx=6.0, gy=10.0):
         # play_area=[0, 10, 0, 14]
         robot_radius=0.8
         )
+    tic = time.perf_counter()
     path = rrt.planning(animation=show_animation)
 
     if path is None:
         print("Cannot find path")
     else:
         print("found path!!")
-
+        toc = time.perf_counter()
+        print(f"Motion planning completed in {toc - tic:0.4f} seconds")
         # Draw final path
         if show_animation:
             rrt.draw_graph()
