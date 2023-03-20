@@ -60,7 +60,7 @@ def prm_planning(start_x, start_y, goal_x, goal_y,
                                        obstacle_x_list, obstacle_y_list,
                                        obstacle_kd_tree, rng)
     if show_animation:
-        plt.plot(sample_x, sample_y, ".", color)
+        plt.plot(sample_x, sample_y, ".", color ="gray")
 
     road_map = generate_road_map(sample_x, sample_y,
                                  robot_radius, obstacle_kd_tree)
@@ -267,7 +267,7 @@ def plot_circle(x, y, size, color="-b"):  # pragma: no cover
         deg.append(0)
         xl = [x + size * math.cos(np.deg2rad(d)) for d in deg]
         yl = [y + size * math.sin(np.deg2rad(d)) for d in deg]
-        # plt.Circle(xl, yl, color)
+        plt.Circle(xl, yl, fill=False)
         return xl,yl
 
 def main(rng=None):
@@ -287,20 +287,25 @@ def main(rng=None):
                     (9, 5, 2), (8, 10, 1)]
 
     for (ox0, oy0, size) in obstacleList:
-        xl, yl = plot_circle(ox0, oy0, size)
-        ox.extend(xl)
-        oy.extend(yl)
+        deg = list(range(0, 360, 5))
+        deg.append(0)
+        plot_circle(ox0, oy0, size)
+        radius = size 
+        while radius > 0:
+            ox += [ox0 + radius * math.cos(np.deg2rad(d)) for d in deg]
+            oy += [oy0 + radius * math.sin(np.deg2rad(d)) for d in deg]
+            radius-=0.1
    
     fig, ax = plt.subplots()
     ax.set_xlim([-2, 15])
     ax.set_ylim([-2, 15])
 
     for obs in obstacleList:
-        circle = plt.Circle((obs[0], obs[1]), obs[2], color="blue", fill=True)
+        circle = plt.Circle((obs[0], obs[1]), obs[2], color="blue", fill=False)
         ax.add_artist(circle)
    
     if show_animation:
-        plt.plot(ox, oy, ".b")
+        # plt.plot(ox, oy)
         plt.plot(sx, sy, "og")
         plt.plot(gx, gy, "or")
         plt.grid(True)  

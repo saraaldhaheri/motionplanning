@@ -244,7 +244,7 @@ def plot_circle(x, y, size, color="-b"):  # pragma: no cover
         deg.append(0)
         xl = [x + size * math.cos(np.deg2rad(d)) for d in deg]
         yl = [y + size * math.sin(np.deg2rad(d)) for d in deg]
-        # plt.Circle(xl, yl, color)
+        plt.Circle(xl, yl, fill=False)
         return xl,yl
 
 def main():
@@ -273,31 +273,32 @@ def main():
     ax.set_xlim([-3, 15])
     ax.set_ylim([-3, 15])
 
-    # for obs in obstacleList:
-    #     circle = plt.Circle((obs[0], obs[1]), obs[2], color="blue", fill=True)
-    #     ax.add_artist(circle)
+    for obs in obstacleList:
+        circle = plt.Circle((obs[0], obs[1]), obs[2], color="blue", fill=False)
+        ax.add_artist(circle)
 
     for i in range(-3, 15):
         ox.append(i)
         oy.append(-3.0)
-    for i in range(-3, 16):
+        plt.plot(i,-3)
+
+    for i in range(-3, 15):
         ox.append(15.0)
         oy.append(i)
-    for i in range(-3, 16):
+        plt.plot(15,i)
+
+    for i in range(-3, 15):
         ox.append(i)
-        oy.append(16.0)
+        oy.append(15.0)
+        plt.plot(15,i)
+
     for i in range(-3, 16):
         ox.append(-3.0)
         oy.append(i)
-    # for i in range(-10, 40):
-    #     ox.append(20.0)
-    #     oy.append(i)
-    # for i in range(0, 40):
-    #     ox.append(40.0)
-    #     oy.append(60.0 - i)
+        plt.plot(-3,i)
+
 
     if show_animation:  # pragma: no cover
-        plt.plot(ox, oy, ".k")
         plt.plot(sx, sy, "og")
         plt.plot(gx, gy, "or")
         plt.grid(True)
