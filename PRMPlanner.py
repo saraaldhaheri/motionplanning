@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from scipy.spatial import KDTree
 
 import time
+# from memory_profiler import profile, memory_usage
 
 # parameter
 N_SAMPLE = 1000  # number of sample_points
@@ -35,7 +36,7 @@ class Node:
         return str(self.x) + "," + str(self.y) + "," +\
                str(self.cost) + "," + str(self.parent_index)
 
-
+# @profile(precision=4)
 def prm_planning(start_x, start_y, goal_x, goal_y,
                  obstacle_x_list, obstacle_y_list, robot_radius, *, rng=None):
     """
@@ -59,7 +60,7 @@ def prm_planning(start_x, start_y, goal_x, goal_y,
                                        obstacle_x_list, obstacle_y_list,
                                        obstacle_kd_tree, rng)
     if show_animation:
-        plt.plot(sample_x, sample_y, ".b")
+        plt.plot(sample_x, sample_y, ".", color)
 
     road_map = generate_road_map(sample_x, sample_y,
                                  robot_radius, obstacle_kd_tree)
@@ -300,8 +301,8 @@ def main(rng=None):
    
     if show_animation:
         plt.plot(ox, oy, ".b")
-        plt.plot(sx, sy, "^r")
-        plt.plot(gx, gy, "x", color="green")
+        plt.plot(sx, sy, "og")
+        plt.plot(gx, gy, "or")
         plt.grid(True)  
         plt.axis("equal")
 
@@ -316,3 +317,6 @@ def main(rng=None):
 
 if __name__ == '__main__':
     main()
+    mem_usage = memory_usage(prm_planning)
+    # print('Memory usage (in chunks of .1 seconds): %s' % mem_usage)
+    print('Maximum memory usage: %s' % max(mem_usage))

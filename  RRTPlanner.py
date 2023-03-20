@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import time
+from memory_profiler import profile
 
 show_animation = True
 
@@ -80,6 +81,7 @@ class RRT:
         self.node_list = []
         self.robot_radius = robot_radius
 
+    @profile(precision=4)
     def planning(self, animation=True):
         """
         rrt path planning
