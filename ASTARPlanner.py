@@ -7,6 +7,8 @@ author: Atsushi Sakai(@Atsushi_twi)
 
 See Wikipedia article (https://en.wikipedia.org/wiki/A*_search_algorithm)
 
+edits by: saraaldhaheri
+
 """
 
 import math
@@ -67,7 +69,7 @@ class AStarPlanner:
             rx: x position list of the final path
             ry: y position list of the final path
         """
-        # tic = time.perf_counter()
+        tic = time.perf_counter()
         start_node = self.Node(self.calc_xy_index(sx, self.min_x),
                                self.calc_xy_index(sy, self.min_y), 0.0, -1)
         goal_node = self.Node(self.calc_xy_index(gx, self.min_x),
@@ -136,8 +138,8 @@ class AStarPlanner:
 
         rx, ry = self.calc_final_path(goal_node, closed_set)
         
-        # toc = time.perf_counter()
-        # print(f"Motion planning completed in {toc - tic:0.4f} seconds")
+        toc = time.perf_counter()
+        print(f"Motion planning completed in {toc - tic:0.4f} seconds")
 
         return rx, ry
 
@@ -315,3 +317,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+    mem_usage = memory_usage(prm_planning)
+    print('Memory usage (in chunks of .1 seconds): %s' % mem_usage)
+    print('Maximum memory usage: %s' % max(mem_usage))
