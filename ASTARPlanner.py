@@ -1,6 +1,8 @@
 """
-
-A* grid planning
+King's College London 
+6CCE3ROS & 7CCEMROB Robotic Systems 
+COURSEWORK2 TASK 4
+Path planning Sample Code with A* grid planning
 
 author: Atsushi Sakai(@Atsushi_twi)
         Nikos Kanargias (nkana@tee.gr)
@@ -8,7 +10,6 @@ author: Atsushi Sakai(@Atsushi_twi)
 See Wikipedia article (https://en.wikipedia.org/wiki/A*_search_algorithm)
 
 edits by: saraaldhaheri
-
 """
 
 import math
@@ -17,7 +18,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import time
-from memory_profiler import profile, memory_usage
+# from memory_profiler import memory_usage
 
 show_animation = True
 
@@ -54,7 +55,7 @@ class AStarPlanner:
             return str(self.x) + "," + str(self.y) + "," + str(
                 self.cost) + "," + str(self.parent_index)
 
-    @profile(precision=4)
+    # @profile(precision=4)
     def planning(self, sx, sy, gx, gy):
         """
         A star path search
@@ -104,7 +105,7 @@ class AStarPlanner:
                     plt.pause(0.001)
 
             if current.x == goal_node.x and current.y == goal_node.y:
-                print("Find goal")
+                print("Goal found!!")
                 goal_node.parent_index = current.parent_index
                 goal_node.cost = current.cost
                 break

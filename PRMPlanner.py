@@ -1,8 +1,13 @@
-# -*- coding: utf-8 -*-
 """
-Created on Fri Mar 17 11:43:29 2023
+King's College London 
+6CCE3ROS & 7CCEMROB Robotic Systems 
+COURSEWORK2 TASK 4
+Path planning Sample Code with PRM
 
-@author: sara
+author: Atsushi Sakai(@Atsushi_twi)
+        Nikos Kanargias (nkana@tee.gr)
+
+edits by: saraaldhaheri
 """
 
 import math
