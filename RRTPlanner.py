@@ -1,9 +1,12 @@
 
+
 """
 King's College London 
 6CCE3ROS & 7CCEMROB Robotic Systems 
 Week 28 Tutorial Question 2 Solution
 Path planning Sample Code with Randomized Rapidly-Exploring Random Trees (RRT)
+
+edits by: saraaldhaheri, renadallagani, emmanueldesouza
 """
 
 import math
@@ -13,10 +16,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import time
-from memory_profiler import profile
+# from memory_profiler import profile # Uncomment for display of memory usuage
+
 
 show_animation = True
-
 
 class RRT:
     """
@@ -81,13 +84,13 @@ class RRT:
         self.node_list = []
         self.robot_radius = robot_radius
 
-    @profile(precision=4)
+    # @profile(precision=4) # Uncomment to print memomory usuage
     def planning(self, animation=True):
         """
         rrt path planning
         animation: flag for animation on or off
         """
-
+        tic = time.perf_counter()
         self.node_list = [self.start]
         for i in range(self.max_iter):
             rnd_node = self.get_random_node()
@@ -104,6 +107,7 @@ class RRT:
             if animation and i % 5 == 0:
                 self.draw_graph(rnd_node)
 
+            # This executes around the end...             
             if self.calc_dist_to_goal(self.node_list[-1].x,
                                       self.node_list[-1].y) <= self.expand_dis:
                 final_node = self.steer(self.node_list[-1], self.end,
@@ -117,31 +121,37 @@ class RRT:
 
         return None  # cannot find path
 
+        
+
     def steer(self, from_node, to_node, extend_length=float("inf")):
 
         new_node = self.Node(from_node.x, from_node.y)
         d, theta = self.calc_distance_and_angle(new_node, to_node)
 
-        new_node.path_x = [new_node.x]
+        new_node.path_x = [new_node.x] # adding new_node as the first item to new_node.path
         new_node.path_y = [new_node.y]
 
         if extend_length > d:
-            extend_length = d
+            extend_length = d # Always true 
 
-        n_expand = math.floor(extend_length / self.path_resolution)
+        n_expand = math.floor(extend_length / self.path_resolution) #round down 
 
         for _ in range(n_expand):
             new_node.x += self.path_resolution * math.cos(theta)
             new_node.y += self.path_resolution * math.sin(theta)
             new_node.path_x.append(new_node.x)
             new_node.path_y.append(new_node.y)
+            # loops n_expand times to reach the new node (selected rnd_node)
+            # adding small steps to the new node path 
 
+        # new_node after extention with n_expand 
         d, _ = self.calc_distance_and_angle(new_node, to_node)
         if d <= self.path_resolution:
             new_node.path_x.append(to_node.x)
             new_node.path_y.append(to_node.y)
             new_node.x = to_node.x
             new_node.y = to_node.y
+            # if distance to to_node is less than resolution, then add the to_node
 
         new_node.parent = from_node
 
@@ -155,18 +165,28 @@ class RRT:
             node = node.parent
         path.append([node.x, node.y])
 
+        
+        # Final Path Length Computation 
+        finalPathLength = 0 
+        for i in range(len(path)-1):
+            finalPathLength += math.sqrt((path[i][0] - path[i+1][0])**2 + (path[i][1] - path[i+1][1])**2)
+        print("Final Path Length: ", finalPathLength)
+        # plt.text(6, 10, round(finalPathLength,1), size=12)
+
+
         return path
 
     def calc_dist_to_goal(self, x, y):
         dx = x - self.end.x
         dy = y - self.end.y
-        return math.hypot(dx, dy)
+        return math.hypot(dx, dy) # finding distance via pythagoras theorem 
 
     def get_random_node(self):
-        if random.randint(0, 100) > self.goal_sample_rate:
+    
+        if random.randint(0, 100) > self.goal_sample_rate: 
             rnd = self.Node(
-                random.uniform(self.min_rand, self.max_rand),
-                random.uniform(self.min_rand, self.max_rand))
+                random.uniform(self.min_rand, self.max_rand), #random x within grid dim
+                random.uniform(self.min_rand, self.max_rand)) #random y within grid dim
         else:  # goal point sampling
             rnd = self.Node(self.end.x, self.end.y)
         return rnd
@@ -213,10 +233,10 @@ class RRT:
         plt.plot(xl, yl, color)
 
     @staticmethod
-    def get_nearest_node_index(node_list, rnd_node):
+    def get_nearest_node_index(node_list, rnd_node): 
         dlist = [(node.x - rnd_node.x)**2 + (node.y - rnd_node.y)**2
-                 for node in node_list]
-        minind = dlist.index(min(dlist))
+                 for node in node_list] # using squared euclidean distance 
+        minind = dlist.index(min(dlist)) # return index of nearest node in tree to rnd_node
 
         return minind
 
@@ -252,7 +272,7 @@ class RRT:
     def calc_distance_and_angle(from_node, to_node):
         dx = to_node.x - from_node.x
         dy = to_node.y - from_node.y
-        d = math.hypot(dx, dy)
+        d = math.hypot(dx, dy) # dist from nearest node to new random node via pythagoras 
         theta = math.atan2(dy, dx)
         return d, theta
 
@@ -267,9 +287,9 @@ def main(gx=6.0, gy=10.0):
     rrt = RRT(
         start=[0, 0],
         goal=[gx, gy],
-        rand_area=[-2, 15],
+        rand_area=[-2, 15], # grid dim 
         obstacle_list=obstacleList,
-        # play_area=[0, 10, 0, 14]
+        #play_area=[0, 10, 0, 14],
         robot_radius=0.8
         )
     tic = time.perf_counter()
@@ -281,6 +301,7 @@ def main(gx=6.0, gy=10.0):
         print("found path!!")
         toc = time.perf_counter()
         print(f"Motion planning completed in {toc - tic:0.4f} seconds")
+
         # Draw final path
         if show_animation:
             rrt.draw_graph()
@@ -288,6 +309,7 @@ def main(gx=6.0, gy=10.0):
             plt.grid(True)
             plt.pause(0.01)  # Need for Mac
             plt.show()
+
 
 
 if __name__ == '__main__':

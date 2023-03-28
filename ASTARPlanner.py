@@ -9,7 +9,7 @@ author: Atsushi Sakai(@Atsushi_twi)
 
 See Wikipedia article (https://en.wikipedia.org/wiki/A*_search_algorithm)
 
-edits by: saraaldhaheri
+edits by: saraaldhaheri, renadallagani, emmanueldesouza
 """
 
 import math
@@ -18,7 +18,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import time
-# from memory_profiler import memory_usage
+from memory_profiler import profile
 
 show_animation = True
 
@@ -55,7 +55,7 @@ class AStarPlanner:
             return str(self.x) + "," + str(self.y) + "," + str(
                 self.cost) + "," + str(self.parent_index)
 
-    # @profile(precision=4)
+    # @profile(precision=4) #Uncomment for information on memory usage
     def planning(self, sx, sy, gx, gy):
         """
         A star path search
@@ -258,7 +258,7 @@ def main():
     sy = 0.0  # [m]
     gx = 6.0  # [m]
     gy = 10.0  # [m]
-    grid_size = 1  # [m]
+    grid_size = 1.0  # [m]
     robot_radius = 0.8  # [m]
     
     # set obstacle positions

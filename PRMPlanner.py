@@ -7,7 +7,7 @@ Path planning Sample Code with PRM
 author: Atsushi Sakai(@Atsushi_twi)
         Nikos Kanargias (nkana@tee.gr)
 
-edits by: saraaldhaheri
+edits by: saraaldhaheri, renadallagani, emmanueldesouza
 """
 
 import math
@@ -19,7 +19,7 @@ import time
 from memory_profiler import profile, memory_usage
 
 # parameter
-N_SAMPLE = 1000  # number of sample_points
+N_SAMPLE = 750  # number of sample_points
 N_KNN = 10  # number of edge from one sampled point
 MAX_EDGE_LEN = 30.0  # [m] Maximum edge length
 
@@ -41,7 +41,7 @@ class Node:
         return str(self.x) + "," + str(self.y) + "," +\
                str(self.cost) + "," + str(self.parent_index)
 
-@profile(precision=4)
+# @profile(precision=4) #Uncomment for information on memory usage
 def prm_planning(start_x, start_y, goal_x, goal_y,
                  obstacle_x_list, obstacle_y_list, robot_radius, *, rng=None):
     """
@@ -138,7 +138,7 @@ def generate_road_map(sample_x, sample_y, rr, obstacle_kd_tree):
 
         road_map.append(edge_id)
 
-    #  plot_road_map(road_map, sample_x, sample_y)
+    # plot_road_map(road_map, sample_x, sample_y)
 
     return road_map
 
@@ -182,6 +182,7 @@ def dijkstra_planning(sx, sy, gx, gy, road_map, sample_x, sample_y):
                 'key_release_event',
                 lambda event: [exit(0) if event.key == 'escape' else None])
             plt.plot(current.x, current.y, "xg")
+            # plt.text(current.x, current.y,round(current.cost,1), size=6)
             plt.pause(0.001)
 
         if c_id == (len(road_map) - 1):
@@ -225,6 +226,7 @@ def dijkstra_planning(sx, sy, gx, gy, road_map, sample_x, sample_y):
         rx.append(n.x)
         ry.append(n.y)
         parent_index = n.parent_index
+    plt.text(current.x, current.y,round(current.cost,1), size=10)
 
     return rx, ry
 
